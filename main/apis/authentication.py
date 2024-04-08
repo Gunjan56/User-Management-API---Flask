@@ -3,13 +3,12 @@ from flask_jwt_extended import create_access_token
 from werkzeug.security import check_password_hash, generate_password_hash
 from app.model import db, User
 from app.main.validators.validators import Validators
-from app.utils import allowed_file
-from flask_mail import Message, Mail
+from app.utils import allowed_file,send_reset_password_email
 import os
 import base64
 from werkzeug.utils import secure_filename
 
-mail = Mail()
+
 auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/register', methods=['POST'])
@@ -76,10 +75,6 @@ def forgot_password():
     else:
         return jsonify({'message': 'User not found'}), 404
     
-def send_reset_password_email(user_email, reset_token):
-    msg = Message('Reset Your Password', sender=os.getenv('MAIL_USERNAME'), recipients=[user_email])
-    msg.body = f'Reset your password: {reset_token}'
-    mail.send(msg)
 
 @auth_bp.route('/reset_password/<token>', methods=['POST'])
 def reset_password(token):

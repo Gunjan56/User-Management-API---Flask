@@ -7,7 +7,7 @@ search_bp = Blueprint('search', __name__)
 @search_bp.route('/search', methods=['GET'])
 def search():
     query = request.args.get('query')
-    search_type = request.args.get('type')  
+    search_type = request.args.get('type')
 
     validation_result = Validators.validate_search_query(query, search_type)
     if validation_result["status"] != 200:
@@ -27,12 +27,12 @@ def search():
     else:
         abort(400, 'Invalid search type')
 
+   
     sort_by = request.args.get('sort_by')
     if sort_by:
         if sort_by == 'likes':
-            search_results.sort(key=lambda x: len(x['likes']), reverse=True)
+            search_results.sort(key=lambda x: len(x.get('likes', [])), reverse=True)
         else:
             abort(400, 'Invalid sort_by parameter')
 
     return jsonify({'results': search_results}), 200
-

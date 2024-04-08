@@ -70,12 +70,7 @@ class Post(db.Model):
         return len(self.likes)
     def to_json(self):
         return {
-            'id': self.id,
-            'content': self.content,
-            'image': self.image,
-            'user_id': self.user_id,
-            'likes': self.likes,
-            'comments': self.comments
+            'id': self.id
         }
 
     def __repr__(self):
