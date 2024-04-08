@@ -22,9 +22,7 @@ def create_app():
     socketio.init_app(app)
     mail.init_app(app)
 
-    from app.main import main as main_blueprint
-    app.register_blueprint(main_blueprint)
-
+    
     from app.main.apis.authentication import auth_bp
     app.register_blueprint(auth_bp)
     from app.main.apis.comment import comment_bp

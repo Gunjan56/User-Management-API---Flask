@@ -91,8 +91,8 @@ def get_posts():
     current_user_id = get_jwt_identity()
     user = User.query.get(current_user_id)
     if user:
-        following_users = [follow.id for follow in user.following]  
-        following_users.append(user.id)  
+        following_users = [follow.id for follow in user.following]
+        following_users.append(user.id)
 
         posts = Post.query.filter(Post.user_id.in_(following_users)).all()
 
@@ -104,11 +104,20 @@ def get_posts():
                 'image': post.image,
                 'user_id': post.user_id,
                 'likes': post.count_likes(),
-                'comments': [comment.to_json() for comment in post.comments]
+                'comments': []  
             }
+             
+            for comment in post.comments:
+                comment_data = {
+                    'id': comment.id,
+                    'content': comment.content,
+                    'user_id': comment.user_id
+                }
+                post_dict['comments'].append(comment_data)
+
             post_data.append(post_dict)
 
-        followers_count = len(user.followers) 
+        followers_count = len(user.followers)
         following_count = len(user.following)
         likes_received = user.count_likes_received()
         post_data.append({"followers_count": followers_count, "following_count": following_count, "likes_received": likes_received})
